@@ -1,0 +1,40 @@
+# Simple single-stage build for RunPod
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy and install requirements first (for better caching)
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY src/ ./src/
+
+# Create __init__.py to ensure proper imports
+RUN touch src/__init__.py
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+ENV RUNPOD_DEBUG=true
+
+# Simple health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD python -c "print('healthy')" || exit 1
+
+# Test imports before starting
+RUN python -c "import runpod; from src.api import MockProcessor; print('All imports OK')"
+
+# Start with verbose logging
+CMD ["python", "-v", "-m", "src.handler"]
+
+LABEL maintainer="yuki@gaos.ca"
+LABEL description="RunPod Test API - Simplified build"
+LABEL runpod.compatible="true"

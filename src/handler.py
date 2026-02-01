@@ -7,6 +7,8 @@ import runpod
 import json
 import asyncio
 import logging
+import sys
+import os
 from typing import Dict, Any, Optional
 from src.api import MockProcessor, validate_request
 
@@ -149,6 +151,29 @@ def handler_with_webhook(event: Dict[str, Any]) -> Dict[str, Any]:
 
 
 if __name__ == "__main__":
+    # Debug startup
+    print("🚀 Handler module starting...")
+    print(f"Python path: {sys.path}")
+    print(f"Working directory: {os.getcwd()}")
+    
+    try:
+        print("📦 Testing imports...")
+        import runpod
+        print(f"✅ runpod version: {runpod.__version__}")
+        
+        from src.api import MockProcessor, validate_request
+        print("✅ src.api imported successfully")
+        
+        print("🔧 Testing handler function...")
+        test_result = health_check()
+        print(f"✅ Health check: {test_result['status']}")
+        
+    except Exception as e:
+        print(f"❌ Startup error: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
+    
     # For local testing
     import sys
     
@@ -168,8 +193,14 @@ if __name__ == "__main__":
         print(json.dumps(result, indent=2))
     else:
         # Production mode - start RunPod serverless
-        print("Starting RunPod serverless handler...")
-        runpod.serverless.start({
-            "handler": handler,
-            "return_aggregate_stream": True  # Enable streaming responses
-        })
+        print("🎯 Starting RunPod serverless handler...")
+        try:
+            runpod.serverless.start({
+                "handler": handler,
+                "return_aggregate_stream": True  # Enable streaming responses
+            })
+        except Exception as e:
+            print(f"❌ RunPod start error: {e}")
+            import traceback
+            traceback.print_exc()
+            sys.exit(1)
