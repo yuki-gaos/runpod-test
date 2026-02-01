@@ -1,0 +1,186 @@
+{
+  "test_cases": [
+    {
+      "name": "Quick Text Processing",
+      "description": "Fast text processing test for development",
+      "request": {
+        "input": {
+          "task_type": "text_processing",
+          "duration": 5,
+          "user_input": "Quick test for development"
+        }
+      }
+    },
+    {
+      "name": "Standard Text Analysis",
+      "description": "Standard text processing with moderate duration",
+      "request": {
+        "input": {
+          "task_type": "text_processing", 
+          "duration": 20,
+          "user_input": "Analyze this customer feedback for sentiment and extract key themes and concerns."
+        }
+      }
+    },
+    {
+      "name": "Image Generation",
+      "description": "AI image generation simulation",
+      "request": {
+        "input": {
+          "task_type": "image_generation",
+          "duration": 25,
+          "user_input": "A futuristic cityscape at sunset with flying cars and neon lights"
+        }
+      }
+    },
+    {
+      "name": "Data Analysis",
+      "description": "Performance metrics analysis",
+      "request": {
+        "input": {
+          "task_type": "data_analysis",
+          "duration": 15,
+          "user_input": "Analyze Q4 sales performance and identify trends"
+        }
+      }
+    },
+    {
+      "name": "Long Running Task", 
+      "description": "Maximum duration test",
+      "request": {
+        "input": {
+          "task_type": "text_processing",
+          "duration": 45,
+          "user_input": "Complex long-running analysis requiring maximum processing time"
+        }
+      }
+    },
+    {
+      "name": "Batch Processing Simulation",
+      "description": "Multiple tasks for testing concurrent processing",
+      "requests": [
+        {
+          "input": {
+            "task_type": "text_processing",
+            "duration": 10,
+            "user_input": "Batch task 1 - Process customer reviews"
+          }
+        },
+        {
+          "input": {
+            "task_type": "image_generation", 
+            "duration": 15,
+            "user_input": "Batch task 2 - Generate product mockups"
+          }
+        },
+        {
+          "input": {
+            "task_type": "data_analysis",
+            "duration": 12,
+            "user_input": "Batch task 3 - Analyze user engagement metrics"
+          }
+        }
+      ]
+    }
+  ],
+  
+  "error_test_cases": [
+    {
+      "name": "Invalid Task Type",
+      "description": "Test error handling for invalid task type",
+      "request": {
+        "input": {
+          "task_type": "invalid_type",
+          "duration": 10,
+          "user_input": "This should fail"
+        }
+      },
+      "expected_error": "validation_error"
+    },
+    {
+      "name": "Duration Too Long",
+      "description": "Test duration validation",
+      "request": {
+        "input": {
+          "task_type": "text_processing",
+          "duration": 100,
+          "user_input": "Duration exceeds 45 second limit"
+        }
+      },
+      "expected_error": "validation_error"
+    },
+    {
+      "name": "Duration Too Short",
+      "description": "Test minimum duration validation", 
+      "request": {
+        "input": {
+          "task_type": "text_processing",
+          "duration": 2,
+          "user_input": "Duration below 5 second minimum"
+        }
+      },
+      "expected_error": "validation_error"
+    },
+    {
+      "name": "Missing Input",
+      "description": "Test handling of missing input object",
+      "request": {},
+      "expected_error": "validation_error"
+    }
+  ],
+  
+  "performance_tests": [
+    {
+      "name": "Cold Start Test",
+      "description": "Test cold start performance",
+      "request": {
+        "input": {
+          "task_type": "text_processing",
+          "duration": 5,
+          "user_input": "Cold start performance test"
+        }
+      },
+      "notes": "Measure time from request to first progress update"
+    },
+    {
+      "name": "Warm Worker Test",
+      "description": "Test performance with warm workers",
+      "sequential_requests": [
+        {
+          "input": {
+            "task_type": "text_processing",
+            "duration": 8,
+            "user_input": "First request to warm up worker"
+          }
+        },
+        {
+          "input": {
+            "task_type": "text_processing", 
+            "duration": 8,
+            "user_input": "Second request on warm worker"
+          }
+        }
+      ],
+      "notes": "Second request should be faster (no cold start)"
+    }
+  ],
+  
+  "webhook_tests": [
+    {
+      "name": "Webhook Integration Test",
+      "description": "Test webhook functionality (when implemented)",
+      "request": {
+        "input": {
+          "task_type": "text_processing",
+          "duration": 30,
+          "user_input": "Long task with webhook updates"
+        },
+        "webhook": {
+          "url": "https://webhook.site/unique-id",
+          "events": ["progress", "completed"]
+        }
+      },
+      "notes": "Requires webhook endpoint implementation"
+    }
+  ]
+}
