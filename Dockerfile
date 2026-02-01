@@ -51,7 +51,7 @@ USER app
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD python -c "from src.utils import get_environment_config; print('healthy')" || exit 1
+    CMD python -c "import runpod; print('healthy')" || exit 1
 
 # Default command - starts the RunPod serverless handler
 CMD ["python", "-m", "src.handler"]
